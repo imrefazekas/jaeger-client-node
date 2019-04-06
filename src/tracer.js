@@ -188,6 +188,14 @@ export default class Tracer {
    *        the created Span object. The time should be specified in
    *        milliseconds as Unix timestamp. Decimal value are supported
    *        to represent time values with sub-millisecond accuracy.
+   * 
+   * @param {Buffer} [options.traceId] - traceID to be used in the SpanContext
+   *        using instead of the internal logic. Use at own risk. 
+   * @param {Buffer} [options.spanId] - spanID to be used in the SpanContext
+   *        using instead of the internal logic. Use at own risk. 
+   * @param {Buffer} [options.parentId] - parentID to be used in the SpanContext
+   *        using instead of the internal logic. Use at own risk. 
+   *
    * @return {Span} - a new Span object.
    **/
   startSpan(operationName: string, options: ?startSpanOptions): Span {
@@ -239,9 +247,9 @@ export default class Tracer {
         ctx.baggage = parent.baggage;
       }
 
-      ctx.traceId = randomId;
-      ctx.spanId = randomId;
-      ctx.parentId = null;
+      ctx.traceId = options.traceId || randomId;
+      ctx.spanId = options.spanId || randomId;
+      ctx.parentId = options.parentId || null;
       ctx.flags = flags;
     } else {
       ctx.traceId = parent.traceId;
